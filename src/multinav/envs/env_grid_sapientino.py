@@ -23,7 +23,7 @@
 import os
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional, Set, Tuple
 
 from flloat.semantics import PLInterpretation
 from gym.wrappers import TimeLimit
@@ -165,13 +165,14 @@ def abs_sapientino_shaper(path: str, gamma: float) -> ValueFunctionRS:
     return shaper
 
 
-def make(params: Dict[str, Any], log_dir: Optional[str] = None):
-    """Make the sapientino grid state environment.
+def _make_base(params: Dict[str, Any], log_dir: Optional[str] = None) -> Tuple[Env, SapientinoGoal]:
+    """Make the common structure of sapientino grid, with temporal goal.
 
     :param params: a dictionary of parameters; see in this function the
         only ones that are used.
     :param log_dir: directory where logs can be saved.
-    :return: an object that respects the gym.Env interface.
+    :return: two elements. The gym environment and the same env, without
+        reward shaping applied.
     """
     # Define the robot
     agent_configuration = SapientinoAgentConfiguration(
@@ -208,6 +209,26 @@ def make(params: Dict[str, Any], log_dir: Optional[str] = None):
 
     # Time limit (this should be before reward shaping)
     env = TimeLimit(env, max_episode_steps=params["episode_time_limit"])
+
+    return env, tg
+
+
+def make(params: Dict[str, Any], log_dir: Optional[str] = None):
+    """Make the sapientino grid state environment.
+
+    :param params: a dictionary of parameters; see in this function the
+        only ones that are used.
+    :param log_dir: directory where logs can be saved.
+    :return: two elements. The gym environment and the same env, without
+        reward shaping applied.
+    """
+    # Create two
+    env, tg = _make_base(params, log_dir)
+    env_unsh, tg_unsh = _make_base(params, log_dir)
+
+    # TODO: continue from here. Return both shaped and unshaped
+    # Adapt users of this class. The goal was to learn q function for both
+    # envs in parallel.
 
     # Testing with DFA shaping
     if params["dfa_shaping"]:

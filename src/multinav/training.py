@@ -311,6 +311,7 @@ class TrainQ(Trainer):
         params: Dict[str, Any],
         model_path: str,
         log_path: str,
+        unshaped_env: Optional[Env] = None,
     ):
         """Initialize.
 
@@ -318,6 +319,8 @@ class TrainQ(Trainer):
         :param params: dict of parameters. See `default_parameters`.
         :param model_path: directory where to save models.
         :param log_path: directory where to save training logs.
+        :param unshaped_env: same environment as env, without reward shaping
+            applied (optional).
         """
         # Check
         if "resume_file" in params and params["resume_file"]:
@@ -364,7 +367,7 @@ class TrainQ(Trainer):
 
     def train(self):
         """Start training."""
-        # Learn
+        # Learn TODO
         self.agent.q_function = q_learning(
             env=self.env,
             total_timesteps=self.params["total_timesteps"],
