@@ -44,7 +44,7 @@ from gym_sapientino.core.configurations import (
 
 from multinav.algorithms.agents import QFunctionModel
 from multinav.envs import sapientino_defs
-from multinav.envs.env_grid_sapientino import Fluents, abs_sapientino_shaper
+from multinav.envs.env_grid_sapientino import Fluents
 from multinav.envs.temporal_goals import SapientinoGoal
 from multinav.helpers.reward_shaping import AutomatonRS, StateH, StateL, ValueFunctionRS
 from multinav.wrappers.reward_shaping import RewardShapingWrapper
@@ -132,7 +132,12 @@ def make(params: Dict[str, Any], log_dir: Optional[str] = None):
         reward=params["tg_reward"],
         save_to=os.path.join(log_dir, "reward-dfa.dot") if log_dir else None,
     )
-    env = MyTemporalGoalWrapper(env=env, temp_goals=[tg])
+    env = MyTemporalGoalWrapper(
+        env=env,
+        temp_goals=[tg],
+        end_on_success=True,
+        end_on_failure=params["end_on_failure"],
+    )
 
     # Time limit (this should be before reward shaping)
     env = TimeLimit(env, max_episode_steps=params["episode_time_limit"])
@@ -148,13 +153,6 @@ def make(params: Dict[str, Any], log_dir: Optional[str] = None):
 
     # Reward shaping on previous envs
     if params["shaping"]:
-        # TODO: temporary path
-        abs_shaper = abs_sapientino_shaper(
-            path="outputs/sapientino-abs/models/0/model_0.pickle",
-            gamma=params["gamma"],
-        )
-        env = RewardShapingWrapper(env, reward_shaper=abs_shaper)
-
         grid_shaper = grid_sapientino_shaper(
             path=params["shaping"],
             gamma=params["gamma"],
