@@ -225,7 +225,7 @@ def make(params: Dict[str, Any], log_dir: Optional[str] = None):
     # Define the robot
     agent_configuration = SapientinoAgentConfiguration(
         continuous=False,
-        differential=False,
+        differential=True,
         initial_position=params["initial_position"],
     )
 

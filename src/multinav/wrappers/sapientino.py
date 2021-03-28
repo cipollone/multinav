@@ -88,7 +88,10 @@ class GridRobotFeatures(AbstractRobotFeatures):
         """Get the observation space."""
         x_space: Discrete = self.robot_space.spaces["discrete_x"]
         y_space: Discrete = self.robot_space.spaces["discrete_y"]
-        return MultiDiscrete([x_space.n, y_space.n, *self.automata_space.nvec])
+        theta_space: Discrete = gym.spaces.Discrete(4)
+        return MultiDiscrete(
+            [x_space.n, y_space.n, theta_space.n, *self.automata_space.nvec]
+        )
 
     def _process_state(self, state):
         """Process the observation."""
@@ -96,6 +99,7 @@ class GridRobotFeatures(AbstractRobotFeatures):
         new_state = (
             robot_state["discrete_x"],
             robot_state["discrete_y"],
+            robot_state["theta"],
             *automata_states,
         )
         return new_state
