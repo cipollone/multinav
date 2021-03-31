@@ -38,15 +38,12 @@ sapientino_color_sequence = ["red", "green", "blue"]
 
 # This is the shape and configuration of the sapientino map
 sapientino_map_str = """\
-|B p##############|
-|## ##############|
-|## ##############|
-|                 |
-|                 |
-|  b              |
-|## ##########r###|
-|##y########## ###|
-|## ##########g###|"""
+|B p#######|
+|## #######|
+|  b       |
+|## ###r###|
+|##y### ###|
+|## ###g###|"""
 sapientino_n_rooms = 3
 
 
