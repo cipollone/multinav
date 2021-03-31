@@ -70,18 +70,9 @@ def grid_sapientino_shaper(
 
     # Collapse to value function
     value_function = {
-        observation: np.amax(q_values)
+        observation: np.amax(q_values) / 100.0  # NOTE: Rescaling
         for observation, q_values in q_function.items()
     }
-
-    # Standardize values
-    moments = RunningMeanStd(shape=())
-    for value in value_function.values():
-        moments.update(np.array([value]))
-    for state, value in value_function.items():
-        value = value - moments.mean
-        value = value / np.sqrt(moments.var + 1e-8)
-        value_function[state] = float(value)
 
     # Define mapping
     def _map(state: StateL) -> StateH:

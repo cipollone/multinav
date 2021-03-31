@@ -108,7 +108,7 @@ class MyTemporalGoalWrapper(TemporalGoalWrapper):
         # Reward
         for tg in self.temp_goals:
             if not tg.is_true():
-                reward += -1
+                reward += -0.01  # TODO: this is ok only in this commit
                 # NOTE: cost function here. Tg.reward ignored
 
         # Termination
