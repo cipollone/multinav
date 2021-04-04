@@ -2,6 +2,7 @@
 /*
 
 # Copying files needed by a minimal install
+!requirements.txt
 !/poetry.lock
 !/pyproject.toml
 !/setup.cfg/
@@ -10,3 +11,6 @@
 !/third_party/
 
 !/docker/
+
+# Parameters are useful too
+!/inputs/
